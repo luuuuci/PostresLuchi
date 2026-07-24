@@ -348,24 +348,60 @@ flipbook.append(backCover);
     //----------------------------------------------------
     // Resize Turn.js book
     //----------------------------------------------------
-    function resizeBook() {
+function resizeBook() {
 
-        const aspectRatio = 1600 / 800;
-        const margin = 30;
 
-        let width = Math.min(1600, window.innerWidth - margin);
-        let height = width / aspectRatio;
+    const aspectRatio = 1600 / 800;
 
-        if (height > window.innerHeight - margin) {
+    const margin = 20;
 
-            height = Math.min(800, window.innerHeight - margin);
-            width = height * aspectRatio;
 
-        }
+    // Use the real visible size
+    const screenWidth = window.visualViewport 
+        ? window.visualViewport.width 
+        : window.innerWidth;
 
-        flipbook.turn("size", width, height);
+
+    const screenHeight = window.visualViewport 
+        ? window.visualViewport.height 
+        : window.innerHeight;
+
+
+
+    let width = screenWidth - margin;
+    let height = width / aspectRatio;
+
+
+
+    // Height is the limit on mobile landscape
+
+    if(height > screenHeight - margin){
+
+
+        height = screenHeight - margin;
+
+        width = height * aspectRatio;
+
 
     }
+
+
+
+    // Prevent making the book too small
+
+    width = Math.min(width, 1600);
+
+    height = Math.min(height, 800);
+
+
+
+    flipbook.turn("size", width, height);
+
+
+    flipbook.turn("center");
+
+
+}
 
  //----------------------------------------------------
 // Initialize Turn.js
@@ -569,7 +605,19 @@ function activateFakeFullscreen(){
 
 }
 
+window.addEventListener("orientationchange", () => {
 
+
+    setTimeout(()=>{
+
+
+        resizeBook();
+
+
+    },1000);
+
+
+});
 
 
 // --------------------------------

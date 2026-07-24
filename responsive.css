@@ -1,0 +1,260 @@
+#rotateMessage{
+    display:none;
+}
+
+@media (max-width:1024px) and (orientation:portrait){
+
+    #rotateMessage{
+
+        position:fixed;
+        inset:0;
+
+        display:flex;
+
+        flex-direction:column;
+
+        justify-content:center;
+        align-items:center;
+
+        text-align:center;
+
+        background:#900a25;
+
+        z-index:9999;
+
+        padding:30px;
+
+        color: aliceblue;
+
+    }
+
+    .flipbook{
+
+        display:none;
+
+    }
+
+}
+
+.bookWrapper{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+   filter:
+        drop-shadow(0 10px 12px rgba(35, 23, 0,.45))
+        drop-shadow(0 30px 45px rgba(35, 23, 0, 0.5));
+
+        position:relative;
+
+
+}
+
+
+.bookWrapper::before{
+
+    content:"";
+
+    position:absolute;
+    inset:0;
+
+    background:
+        radial-gradient(
+            ellipse at center,
+            rgba(255,255,255,.08),
+            transparent 80%
+        );
+
+    pointer-events:none;
+    z-index:1000;
+}
+
+
+/* ===================================
+   RESPONSIVE FINAL PAGES
+=================================== */
+
+
+/* Tablets and small landscape screens */
+@media (max-width:1200px) {
+
+
+    .finalTitle {
+
+        font-size:clamp(1.5rem,3vw,2.5rem);
+
+    }
+
+
+    .finalText {
+
+        font-size:clamp(.75rem,1.4vw,1rem);
+
+        max-width:80%;
+
+    }
+
+
+    .dessertGallery {
+
+        gap:15px;
+
+    }
+
+
+    .favRecipeImage {
+
+        width:90px;
+        height:90px;
+
+    }
+
+
+    .favRecipe span {
+
+        font-size:.75rem;
+
+    }
+
+}
+
+
+
+
+/* Phones in landscape */
+@media (max-width:900px) and (orientation:landscape){
+
+
+    .pageContent{
+
+        padding:12px;
+
+    }
+
+
+    .finalTitle{
+
+        font-size:1.7rem;
+
+        margin-bottom:8px;
+
+    }
+
+
+    .finalDivider{
+
+        margin-bottom:12px;
+
+        letter-spacing:4px;
+
+    }
+
+
+    .finalText{
+
+        font-size:.8rem;
+
+        max-width:85%;
+
+        margin-bottom:12px;
+
+        line-height:1.4;
+
+    }
+
+
+    .dessertGallery{
+
+        gap:8px;
+
+        margin-top:10px;
+
+    }
+
+
+    .favRecipeImage{
+
+        width:65px;
+
+        height:65px;
+
+        border-width:2px;
+
+    }
+
+
+    .favRecipe span{
+
+        font-size:.55rem;
+
+        max-width:70px;
+
+    }
+
+
+    .finalHint{
+
+        margin-top:10px;
+
+        font-size:.6rem;
+
+    }
+
+
+    .finalDecoration{
+
+        top:10px;
+
+        font-size:1rem;
+
+    }
+
+
+    .finalSignature{
+
+        margin-top:10px;
+
+    }
+
+
+    .finalSignature span{
+
+        font-size:1.5rem;
+
+    }
+
+}
+
+
+
+
+/* iPad landscape */
+@media (min-width:901px) and (max-width:1400px) and (orientation:landscape){
+
+
+    .finalTitle{
+
+        font-size:2.3rem;
+
+    }
+
+
+    .favRecipeImage{
+
+        width:100px;
+
+        height:100px;
+
+    }
+
+
+    .finalText{
+
+        font-size:1rem;
+
+    }
+
+}

@@ -70,27 +70,6 @@
 
 }
 
-.mobileFullscreen{
-
-    position:fixed;
-
-    inset:0;
-
-    overflow:hidden;
-
-}
-
-
-.mobileFullscreen .flipbook{
-
-    position:fixed;
-
-    inset:0;
-
-    margin:auto;
-
-}
-
 @media (max-width:1024px) and (orientation:portrait){
 
 

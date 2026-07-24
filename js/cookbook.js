@@ -522,6 +522,97 @@ flipbook.on("mouseleave", function () {
 
     });
 
+
+
+    // ===============================
+// MOBILE FULLSCREEN BUTTON
+// ===============================
+
+const fullscreenButton = document.getElementById("fullscreenButton");
+const fullscreenMessage = document.getElementById("fullscreenMessage");
+
+const exitFullscreenButton = document.getElementById("exitFullscreenButton");
+
+
+if (fullscreenButton) {
+
+    fullscreenButton.addEventListener("click", () => {
+
+        document.body.style.overflow = "hidden";
+
+        if (document.documentElement.requestFullscreen) {
+
+            document.documentElement.requestFullscreen();
+
+        }
+
+        if (fullscreenMessage) {
+
+            fullscreenMessage.style.display = "none";
+
+        }
+
+        exitFullscreenButton.style.display = "block";
+
+        setTimeout(() => {
+
+            resizeFlipbook();
+
+        }, 500);
+
+    });
+
+}
+
+
+if (exitFullscreenButton) {
+
+    exitFullscreenButton.addEventListener("click", () => {
+
+        if (document.fullscreenElement) {
+
+            document.exitFullscreen();
+
+        }
+
+    });
+
+}
+
+
+// Resize again when fullscreen changes
+document.addEventListener("fullscreenchange", () => {
+
+    if (document.fullscreenElement) {
+
+        if (fullscreenMessage) {
+
+            fullscreenMessage.style.display = "none";
+
+        }
+
+        exitFullscreenButton.style.display = "block";
+
+    } else {
+
+        if (fullscreenMessage) {
+
+            fullscreenMessage.style.display = "flex";
+
+        }
+
+        exitFullscreenButton.style.display = "none";
+
+    }
+
+    setTimeout(() => {
+
+        resizeFlipbook();
+
+    }, 300);
+
+});
+
     //----------------------------------------------------
 // Favourite recipe navigation
 //----------------------------------------------------

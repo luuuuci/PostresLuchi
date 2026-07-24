@@ -523,7 +523,6 @@ flipbook.on("mouseleave", function () {
     });
 
 
-
 // ===============================
 // MOBILE FULLSCREEN BUTTON
 // ===============================
@@ -532,6 +531,42 @@ const fullscreenButton = document.getElementById("fullscreenButton");
 const fullscreenMessage = document.getElementById("fullscreenMessage");
 
 const exitFullscreenButton = document.getElementById("exitFullscreenButton");
+
+
+
+// Function for Safari fake fullscreen
+function activateFakeFullscreen(){
+
+
+    document.body.classList.add("mobileFullscreen");
+
+
+    flipbook.css("display","block");
+
+
+    if(fullscreenMessage){
+
+        fullscreenMessage.style.display="none";
+
+    }
+
+
+    if(exitFullscreenButton){
+
+        exitFullscreenButton.style.display="block";
+
+    }
+
+
+    setTimeout(()=>{
+
+        resizeBook();
+
+    },300);
+
+
+}
+
 
 
 // Open cookbook button
@@ -543,51 +578,65 @@ if (fullscreenButton) {
         document.body.style.overflow = "hidden";
 
 
-        // Show flipbook
-        flipbook.css("display", "block");
-
-
-        // Enter fullscreen
+        // Chrome / Android real fullscreen
         if (document.documentElement.requestFullscreen) {
 
+
             document.documentElement.requestFullscreen()
-            .then(() => {
+            .then(()=>{
 
-                // Try to lock landscape mode
-                if (screen.orientation && screen.orientation.lock) {
 
-                    screen.orientation.lock("landscape")
-                    .catch(() => {});
+                flipbook.css("display","block");
+
+
+                if(fullscreenMessage){
+
+                    fullscreenMessage.style.display="none";
 
                 }
 
+
+                if(exitFullscreenButton){
+
+                    exitFullscreenButton.style.display="block";
+
+                }
+
+
+                // Lock landscape if possible
+                if(screen.orientation && screen.orientation.lock){
+
+                    screen.orientation.lock("landscape")
+                    .catch(()=>{});
+
+                }
+
+
+                setTimeout(()=>{
+
+                    resizeBook();
+
+                },500);
+
+
+            })
+            .catch(()=>{
+
+                // Safari fallback
+                activateFakeFullscreen();
+
             });
 
-        }
-
-
-        // Hide open message
-        if (fullscreenMessage) {
-
-            fullscreenMessage.style.display = "none";
 
         }
 
+        else {
 
-        // Show exit button
-        if (exitFullscreenButton) {
 
-            exitFullscreenButton.style.display = "block";
+            // Safari fallback
+            activateFakeFullscreen();
 
         }
-
-
-        // Resize after fullscreen
-        setTimeout(() => {
-
-            resizeBook();
-
-        }, 500);
 
 
     });
@@ -596,15 +645,45 @@ if (fullscreenButton) {
 
 
 
-// Exit fullscreen button
+
+// Exit button
 if (exitFullscreenButton) {
 
     exitFullscreenButton.addEventListener("click", () => {
 
 
-        if (document.fullscreenElement) {
+        // Chrome fullscreen
+        if(document.fullscreenElement){
+
 
             document.exitFullscreen();
+
+
+        }
+
+
+        // Safari fake fullscreen
+        else {
+
+
+            document.body.classList.remove("mobileFullscreen");
+
+
+            flipbook.css("display","none");
+
+
+            if(fullscreenMessage){
+
+                fullscreenMessage.style.display="flex";
+
+            }
+
+
+            exitFullscreenButton.style.display="none";
+
+
+            resizeBook();
+
 
         }
 
@@ -615,53 +694,20 @@ if (exitFullscreenButton) {
 
 
 
-// Detect fullscreen changes
-document.addEventListener("fullscreenchange", () => {
+
+// Detect Chrome fullscreen changes
+document.addEventListener("fullscreenchange", ()=>{
 
 
-    if (document.fullscreenElement) {
+    if(document.fullscreenElement){
 
 
-        // We are in fullscreen
-
-        if (fullscreenMessage) {
-
-            fullscreenMessage.style.display = "none";
-
-        }
+        flipbook.css("display","block");
 
 
-        if (exitFullscreenButton) {
+        if(exitFullscreenButton){
 
-            exitFullscreenButton.style.display = "block";
-
-        }
-
-
-        flipbook.css("display", "block");
-
-
-    } 
-    
-    else {
-
-
-        // We exited fullscreen
-
-
-        flipbook.css("display", "none");
-
-
-        if (fullscreenMessage) {
-
-            fullscreenMessage.style.display = "flex";
-
-        }
-
-
-        if (exitFullscreenButton) {
-
-            exitFullscreenButton.style.display = "none";
+            exitFullscreenButton.style.display="block";
 
         }
 
@@ -669,11 +715,42 @@ document.addEventListener("fullscreenchange", () => {
     }
 
 
-    setTimeout(() => {
+    else {
+
+
+        // Only reset if it was real fullscreen
+
+        if(!document.body.classList.contains("mobileFullscreen")){
+
+
+            flipbook.css("display","none");
+
+
+            if(fullscreenMessage){
+
+                fullscreenMessage.style.display="flex";
+
+            }
+
+
+            if(exitFullscreenButton){
+
+                exitFullscreenButton.style.display="none";
+
+            }
+
+
+        }
+
+
+    }
+
+
+    setTimeout(()=>{
 
         resizeBook();
 
-    }, 300);
+    },300);
 
 
 });

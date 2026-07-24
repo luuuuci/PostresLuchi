@@ -524,7 +524,7 @@ flipbook.on("mouseleave", function () {
 
 
 
-    // ===============================
+// ===============================
 // MOBILE FULLSCREEN BUTTON
 // ===============================
 
@@ -534,40 +534,73 @@ const fullscreenMessage = document.getElementById("fullscreenMessage");
 const exitFullscreenButton = document.getElementById("exitFullscreenButton");
 
 
+// Open cookbook button
 if (fullscreenButton) {
 
     fullscreenButton.addEventListener("click", () => {
 
+
         document.body.style.overflow = "hidden";
 
+
+        // Show flipbook
+        flipbook.css("display", "block");
+
+
+        // Enter fullscreen
         if (document.documentElement.requestFullscreen) {
 
-            document.documentElement.requestFullscreen();
+            document.documentElement.requestFullscreen()
+            .then(() => {
+
+                // Try to lock landscape mode
+                if (screen.orientation && screen.orientation.lock) {
+
+                    screen.orientation.lock("landscape")
+                    .catch(() => {});
+
+                }
+
+            });
 
         }
 
+
+        // Hide open message
         if (fullscreenMessage) {
 
             fullscreenMessage.style.display = "none";
 
         }
 
-        exitFullscreenButton.style.display = "block";
 
+        // Show exit button
+        if (exitFullscreenButton) {
+
+            exitFullscreenButton.style.display = "block";
+
+        }
+
+
+        // Resize after fullscreen
         setTimeout(() => {
 
-            resizeFlipbook();
+            resizeBook();
 
         }, 500);
+
 
     });
 
 }
 
 
+
+// Exit fullscreen button
 if (exitFullscreenButton) {
 
     exitFullscreenButton.addEventListener("click", () => {
+
 
         if (document.fullscreenElement) {
 
@@ -575,15 +608,21 @@ if (exitFullscreenButton) {
 
         }
 
+
     });
 
 }
 
 
-// Resize again when fullscreen changes
+
+// Detect fullscreen changes
 document.addEventListener("fullscreenchange", () => {
 
+
     if (document.fullscreenElement) {
+
+
+        // We are in fullscreen
 
         if (fullscreenMessage) {
 
@@ -591,9 +630,27 @@ document.addEventListener("fullscreenchange", () => {
 
         }
 
-        exitFullscreenButton.style.display = "block";
 
-    } else {
+        if (exitFullscreenButton) {
+
+            exitFullscreenButton.style.display = "block";
+
+        }
+
+
+        flipbook.css("display", "block");
+
+
+    } 
+    
+    else {
+
+
+        // We exited fullscreen
+
+
+        flipbook.css("display", "none");
+
 
         if (fullscreenMessage) {
 
@@ -601,15 +658,23 @@ document.addEventListener("fullscreenchange", () => {
 
         }
 
-        exitFullscreenButton.style.display = "none";
+
+        if (exitFullscreenButton) {
+
+            exitFullscreenButton.style.display = "none";
+
+        }
+
 
     }
 
+
     setTimeout(() => {
 
-        resizeFlipbook();
+        resizeBook();
 
     }, 300);
+
 
 });
 

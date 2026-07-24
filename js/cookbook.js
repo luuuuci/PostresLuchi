@@ -522,7 +522,6 @@ flipbook.on("mouseleave", function () {
 
     });
 
-
 // ===============================
 // MOBILE FULLSCREEN BUTTON
 // ===============================
@@ -534,7 +533,10 @@ const exitFullscreenButton = document.getElementById("exitFullscreenButton");
 
 
 
-// Function for Safari fake fullscreen
+// --------------------------------
+// Safari fake fullscreen
+// --------------------------------
+
 function activateFakeFullscreen(){
 
 
@@ -569,8 +571,13 @@ function activateFakeFullscreen(){
 
 
 
+
+// --------------------------------
 // Open cookbook button
+// --------------------------------
+
 if (fullscreenButton) {
+
 
     fullscreenButton.addEventListener("click", () => {
 
@@ -578,81 +585,126 @@ if (fullscreenButton) {
         document.body.style.overflow = "hidden";
 
 
-        // Chrome / Android real fullscreen
-        if (document.documentElement.requestFullscreen) {
+        // Detect iPhone/iPad Safari
+        const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
 
-            document.documentElement.requestFullscreen()
-            .then(()=>{
+
+        // -------------------------
+        // Safari
+        // -------------------------
+
+        if(isIOS){
 
 
-                flipbook.css("display","block");
-
-
-                if(fullscreenMessage){
-
-                    fullscreenMessage.style.display="none";
-
-                }
-
-
-                if(exitFullscreenButton){
-
-                    exitFullscreenButton.style.display="block";
-
-                }
-
-
-                // Lock landscape if possible
-                if(screen.orientation && screen.orientation.lock){
-
-                    screen.orientation.lock("landscape")
-                    .catch(()=>{});
-
-                }
-
-
-                setTimeout(()=>{
-
-                    resizeBook();
-
-                },500);
-
-
-            })
-            .catch(()=>{
-
-                // Safari fallback
-                activateFakeFullscreen();
-
-            });
+            activateFakeFullscreen();
 
 
         }
+
+
+
+        // -------------------------
+        // Chrome / Android
+        // -------------------------
 
         else {
 
 
-            // Safari fallback
-            activateFakeFullscreen();
+            if(document.documentElement.requestFullscreen){
+
+
+                document.documentElement.requestFullscreen()
+                .then(()=>{
+
+
+                    flipbook.css("display","block");
+
+
+                    if(fullscreenMessage){
+
+                        fullscreenMessage.style.display="none";
+
+                    }
+
+
+                    if(exitFullscreenButton){
+
+                        exitFullscreenButton.style.display="block";
+
+                    }
+
+
+
+                    // Try landscape lock
+
+                    if(screen.orientation && screen.orientation.lock){
+
+
+                        screen.orientation.lock("landscape")
+                        .catch(()=>{});
+
+
+                    }
+
+
+
+                    setTimeout(()=>{
+
+                        resizeBook();
+
+                    },500);
+
+
+
+                })
+                .catch(()=>{
+
+
+                    // fallback
+
+                    activateFakeFullscreen();
+
+
+                });
+
+
+            }
+
+            else {
+
+
+                activateFakeFullscreen();
+
+
+            }
+
 
         }
 
 
+
     });
+
 
 }
 
 
 
 
-// Exit button
-if (exitFullscreenButton) {
 
-    exitFullscreenButton.addEventListener("click", () => {
+// --------------------------------
+// Exit button
+// --------------------------------
+
+if(exitFullscreenButton){
+
+
+    exitFullscreenButton.addEventListener("click",()=>{
 
 
         // Chrome fullscreen
+
         if(document.fullscreenElement){
 
 
@@ -663,6 +715,7 @@ if (exitFullscreenButton) {
 
 
         // Safari fake fullscreen
+
         else {
 
 
@@ -688,15 +741,21 @@ if (exitFullscreenButton) {
         }
 
 
+
     });
+
 
 }
 
 
 
 
+
+// --------------------------------
 // Detect Chrome fullscreen changes
-document.addEventListener("fullscreenchange", ()=>{
+// --------------------------------
+
+document.addEventListener("fullscreenchange",()=>{
 
 
     if(document.fullscreenElement){
@@ -715,10 +774,12 @@ document.addEventListener("fullscreenchange", ()=>{
     }
 
 
+
     else {
 
 
-        // Only reset if it was real fullscreen
+
+        // Do not reset Safari fake fullscreen
 
         if(!document.body.classList.contains("mobileFullscreen")){
 
@@ -746,11 +807,13 @@ document.addEventListener("fullscreenchange", ()=>{
     }
 
 
+
     setTimeout(()=>{
 
         resizeBook();
 
     },300);
+
 
 
 });
